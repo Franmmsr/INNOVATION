@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CultureCheck - Evaluación de Compatibilidad Cultural</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --secondary: #475569;
+            --accent: #f59e0b;
+            --light: #f8fafc;
+            --dark: #0f172a;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .logo-text span {
+            color: var(--accent);
+        }
+        
+        .tagline {
+            color: var(--secondary);
+            font-size: 1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .file-input-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            border-radius: 6px;
+            padding: 2rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .file-input-label:hover {
+            background-color: #e2e8f0;
+        }
+        
+        .file-input {
+            position: absolute;
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .preview-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .multiselect-container {
+            position: relative;
+        }
+        
+        .multiselect {
+            position: relative;
+            min-height: 20px;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .multiselect:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .tag {
+            background-color: var(--primary-light);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tag-remove {
+            margin-left: 4px;
+            cursor: pointer;
+        }
+        
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            margin-top: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        .dropdown.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .placeholder {
+            color: #94a3b8;
+        }
+        
+        .checkbox-group {
+            margin-top: 1rem;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+        }
+        
+        .checkbox-input {
+            width: auto;
+            margin-right: 0.5rem;
+            margin-top: 0.3rem;
+        }
+        
+        .checkbox-text {
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1e40af;
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--secondary);
+            color: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background-color: #f1f5f9;
+        }
+        
+        .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+        
+        .footer {
+            text-align: center;
+            color: var(--secondary);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+        
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 640px) {
+            .form-card {
+                padding: 1.5rem;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <div class="logo-text">Culture<span>Check</span></div>
+            </div>
+            <p class="tagline">Evalúa la compatibilidad cultural de tu producto en mercados globales</p>
+        </header>
+        
+        <form id="cultureCheckForm">
+            <div class="form-card">
+                <h2 class="form-title">Información del Producto</h2>
+                
+                <div class="form-group">
+                    <label for="productName">Nombre del Producto <span class="required">*</span></label>
+                    <input type="text" id="productName" name="productName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription">Descripción del Producto <span class="required">*</span></label>
+                    <textarea id="productDescription" name="productDescription" placeholder="Describa su producto, incluyendo su función principal, características clave y público objetivo..." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productCategory">Categoría del Producto <span class="required">*</span></label>
+                    <select id="productCategory" name="productCategory" required>
+                        <option value="" disabled selected>Seleccione una categoría</option>
+                        <option value="tech">Tecnología y Electrónica</option>
+                        <option value="fashion">Moda y Ropa</option>
+                        <option value="beauty">Belleza y Cuidado Personal</option>
+                        <option value="food">Alimentos y Bebidas</option>
+                        <option value="health">Salud y Bienestar</option>
+                        <option value="home">Hogar y Decoración</option>
+                        <option value="toys">Juguetes y Entretenimiento</option>
+                        <option value="software">Software y Aplicaciones</option>
+                        <option value="other">Otro</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Fotos del Producto</label>
+                    <div class="file-input-container">
+                        <label for="productImages" class="file-input-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px;">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Arrastre o haga clic para subir imágenes
+                        </label>
+                        <input type="file" id="productImages" name="productImages" class="file-input" accept="image/*" multiple>
+                    </div>
+                    <div class="file-preview" id="imagePreview"></div>
+                </div>
+            </div>
+            
+            <div class="form-card">
+                <h2 class="form-title">Mercados Objetivo</h2>
+                
+                <div class="form-group">
+                    <label for="targetCountries">Países de Interés <span class="required">*</span></label>
+                    <div class="multiselect-container">
+                        <div class="multiselect" id="countriesSelect" tabindex="0">
+                            <span class="placeholder">Seleccione los países objetivo...</span>
+                        </div>
+                        <div class="dropdown" id="countriesDropdown">
+                            <div class="dropdown-item" data-value="us">Estados Unidos</div>
+                            <div class="dropdown-item" data-value="cn">China</div>
+                            <div class="dropdown-item" data-value="jp">Japón</div>
+                            <div class="dropdown-item" data-value="in">India</div>
+                            <div class="dropdown-item" data-value="br">Brasil</div>
+                            <div class="dropdown-item" data-value="de">Alemania</div>
+                            <div class="dropdown-item" data-value="fr">Francia</div>
+                            <div class="dropdown-item" data-value="gb">Reino Unido</div>
+                            <div class="dropdown-item" data-value="mx">México</div>
+                            <div class="dropdown-item" data-value="es">España</div>
+                            <div class="dropdown-item" data-value="sa">Arabia Saudita</div>
+                            <div class="dropdown-item" data-value="za">Sudáfrica</div>
+                            <div class="dropdown-item" data-value="au">Australia</div>
+                            <div class="dropdown-item" data-value="ru">Rusia</div>
+                            <div class="dropdown-item" data-value="ng">Nigeria</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expansionPriority">Prioridad de Expansión</label>
+                    <select id="expansionPriority" name="expansionPriority">
+                        <option value="" disabled selected>Seleccione una prioridad</option>
+                        <option value="immediate">Inmediata (0-3 meses)</option>
+                        <option value="short">Corto plazo (3-6 meses)</option>
+                        <option value="medium">Mediano plazo (6-12 meses)</option>
+                        <option value="long">Largo plazo (más de 12 meses)</option>
+                        <option value="research">Solo investigación de mercado</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Consideraciones Especiales</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="considerations" value="religious">
+                            <span class="checkbox-text">Sensibilidades religiosas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="considerations" value="language">
+                            <span class="checkbox-text">Barreras lingüísticas</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="considerations" value="legal">
+                            <span class="checkbox-text">Restricciones legales</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="considerations" value="color">
+                            <span class="checkbox-text">Significado cultural de colores</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" class="checkbox-input" name="considerations" value="naming">
+                            <span class="checkbox-text">Significado cultural del nombre</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-card">
+                <h2 class="form-title">Información de Contacto</h2>
+                
+                <div class="form-group">
+                    <label for="companyName">Nombre de la Empresa <span class="required">*</span></label>
+                    <input type="text" id="companyName" name="companyName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactName">Nombre de Contacto <span class="required">*</span></label>
+                    <input type="text" id="contactName" name="contactName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactEmail">Correo Electrónico <span class="required">*</span></label>
+                    <input type="email" id="contactEmail" name="contactEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactPhone">Teléfono</label>
+                    <input type="tel" id="contactPhone" name="contactPhone">
+                </div>
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-outline">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Solicitar Evaluación</button>
+                </div>
+            </div>
+        </form>
+        
+        <div class="footer">
+            <p>&copy; 2025 CultureCheck. Todos los derechos reservados. <a href="#">Política de Privacidad</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad para el selector múltiple de países
+        const multiselectContainer = document.querySelector('.multiselect-container');
+        const multiselect = document.getElementById('countriesSelect');
+        const dropdown = document.getElementById('countriesDropdown');
+        const placeholder = multiselect.querySelector('.placeholder');
+        const selectedCountries = new Set();
+        
+        multiselect.addEventListener('click', () => {
+            dropdown.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!multiselectContainer.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        const dropdownItems = dropdown.querySelectorAll('.dropdown-item');
+        dropdownItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const value = item.dataset.value;
+                const text = item.textContent;
+                
+                if (!selectedCountries.has(value)) {
+                    selectedCountries.add(value);
+                    
+                    if (placeholder) {
+                        placeholder.remove();
+                    }
+                    
+                    const tag = document.createElement('div');
+                    tag.className = 'tag';
+                    tag.dataset.value = value;
+                    tag.innerHTML = `${text}<span class="tag-remove">&times;</span>`;
+                    
+                    const removeBtn = tag.querySelector('.tag-remove');
+                    removeBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        tag.remove();
+                        selectedCountries.delete(value);
+                        
+                        if (selectedCountries.size === 0) {
+                            const newPlaceholder = document.createElement('span');
+                            newPlaceholder.className = 'placeholder';
+                            newPlaceholder.textContent = 'Seleccione los países objetivo...';
+                            multiselect.appendChild(newPlaceholder);
+                        }
+                    });
+                    
+                    multiselect.appendChild(tag);
+                }
+            });
+        });
+        
+        // Funcionalidad para la previsualización de imágenes
+        const fileInput = document.getElementById('productImages');
+        const imagePreview = document.getElementById('imagePreview');
+        
+        fileInput.addEventListener('change', function() {
+            imagePreview.innerHTML = '';
+            
+            if (this.files) {
+                for (let i = 0; i < this.files.length; i++) {
+                    if (i >= 4) break; // Limitar a 4 imágenes de previsualización
+                    
+                    const file = this.files[i];
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        
+                        previewItem.appendChild(img);
+                        imagePreview.appendChild(previewItem);
+                    }
+                    
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
+        
+        // Validación de formulario
+        const form = document.getElementById('cultureCheckForm');
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validación simple
+            const productName = document.getElementById('productName').value;
+            const productDescription = document.getElementById('productDescription').value;
+            const productCategory = document.getElementById('productCategory').value;
+            const companyName = document.getElementById('companyName').value;
+            const contactName = document.getElementById('contactName').value;
+            const contactEmail = document.getElementById('contactEmail').value;
+            
+            if (!productName || !productDescription || !productCategory || !companyName || !contactName || !contactEmail) {
+                alert('Por favor complete todos los campos obligatorios.');
+                return;
+            }
+            
+            if (selectedCountries.size === 0) {
+                alert('Por favor seleccione al menos un país objetivo.');
+                return;
+            }
+            
+            // Aquí iría el código para enviar los datos al servidor
+            alert('¡Formulario enviado correctamente! Nos pondremos en contacto con usted pronto.');
+            form.reset();
+            
+            // Limpiar selección de países
+            selectedCountries.clear();
+            const tags = multiselect.querySelectorAll('.tag');
+            tags.forEach(tag => tag.remove());
+            
+            const newPlaceholder = document.createElement('span');
+            newPlaceholder.className = 'placeholder';
+            newPlaceholder.textContent = 'Seleccione los países objetivo...';
+            multiselect.appendChild(newPlaceholder);
+            
+            // Limpiar previsualización de imágenes
+            imagePreview.innerHTML = '';
+        });
+    </script>
+</body>
+</html>
